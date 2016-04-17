@@ -4,3 +4,7 @@
 *.log
 *.synctex.gz
 auto/
+*.nav
+*.out
+*.snm
+*.toc
