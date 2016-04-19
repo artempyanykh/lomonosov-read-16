@@ -12,6 +12,8 @@
 \usepackage{mathrsfs}
 \usepackage{bbm}
 
+\usepackage{graphicx}
+
 \title[Биржевые торги с непрерывными ставками]{%
   О модификации многошаговой модели биржевых торгов с непрерывными ставками%
 }
@@ -38,6 +40,7 @@
 \newcommand{\Borel}{\ensuremath{\mathscr{B}}}
 \newcommand{\Co}{\ensuremath{\beta}}
 \newcommand{\Dco}{\ensuremath{\overline{\beta}}}
+\newcommand{\di}{\ensuremath{\mathrm{d}}}
 
 \begin{document}
 
@@ -179,8 +182,8 @@
   \only<2>{%
     \framesubtitle{Прямая игра}%
     Пусть $h_t = (p_{1,1}, p_{2,1}, \ldots, p_{1,t}, p_{2,t})$ --- история
-    ставок к $t$-му ходу, а $H_t$ --- множество всевозможных $h_t$. Также
-    $\Delta(X)$ обозначим множество распределений на $(X, \Borel(X))$.
+    ставок к $t$-му ходу, а $H_t$ --- множество всевозможных $h_t$. Также через
+    $\Delta(X)$ обозначим совокупность всех распределений на $(X, \Borel(X))$.
     
     \begin{itemize}
     \item%
@@ -294,12 +297,190 @@
 
 \begin{frame}
   \frametitle{Анализ прямой и двойственной игр}
+  
+  \only<1>{
+    Для одношагового выигрыша игрока 1 справедлива формула
+    \framesubtitle{Одношаговый выигрыш}
+    \begin{multline*}
+      g_1(P, \sigma_1, p_2) = P \int_I \biggl[
+      \Ind_{p_1 > p_2}(1 - \Co p_1 - \Dco p_2) +
+      \Ind_{p_1 < p_2} \times \\
+      \times (\Dco p_1 - \Co p_2 - 1)
+      \biggr] \; \sigma^H_1(\di p_1)
+      + (1-P) \int_I \biggl[
+      \Ind_{p_1 > p_2} \times \\
+      \times (- \Co p_1 - \Dco p_2)
+      + \Ind_{p_1 < p_2}(\Dco p_1 - \Co p_2)
+      \biggr] \; \sigma^L_1(\di p_1).
+    \end{multline*}
+
+  }
+  
+  \only<2>{
+    \framesubtitle{Одношаговый выигрыш}
+    Обозначим $\sigma^M_1(p_1) = P \sigma^H_1(p_1) + (1-P) \sigma^L_1(p_1)$
+    маргинальное распределение ставки $p_1$.
+  }
+  
+  \only<2,3>{
+    \framesubtitle{Одношаговый выигрыш}
+    Справедливо следующее равенство:
+    \begin{equation*}
+      P(p_1) = P \frac{\di \sigma^H_1}{\di \sigma^L_1}(p_1),
+    \end{equation*}
+    где $\di \sigma^H_1 / \di \sigma^L_1$ --- производная Радона-Никодима.
+
+  }
+  
+  \only<3>{%
+    \framesubtitle{Одношаговый выигрыш}
+    Воспользовавшись им для замены меры в формуле для одношагового выигрыша,
+    получим
+
+  }
+  
+  \only<3,4>{%
+    \framesubtitle{Параметризация хода инсайдера}
+    \begin{multline*}
+      g_1(P, \sigma_1, p_2) =
+      \int_I \Ind_{p_1 > p_2} \biggl[
+      P(p_1) - \Co p_1 - \Dco p_2
+      \biggr] \; \sigma^M_1(\di p_1) \; + \\
+      + \int_I \Ind_{p_1 < p_2} \biggl[
+      \Dco p_1 + \Co p_2 - P(p_1)
+      \biggr] \; \sigma^M_1(\di p_1).
+    \end{multline*}
+
+  }
+  
+  \only<4>{%
+    \framesubtitle{Параметризация хода инсайдера}
+    Данная формула дает способ параметризации хода игрока 1.
+    \begin{itemize}
+    \item%
+      Возьмем случайную величину $u$, равномерно распределенную на $[0, 1]$.
+
+    \item%
+      Пусть $f(\cdot)$ -- левая обратная функции распределения $p_1$. При этом
+      $f(u)$ и $p_1$ одинаково распределены. 
+
+    \item%
+      Пусть $Q(u) = P(f(u))$.
+    \end{itemize}
+
+
+  }
+  
+  \only<5>{%
+    \framesubtitle{Параметризация хода неосведомленного игрока}
+    Функции $f$ и $Q$ должны удовлетворять следующим свойствам, чтобы служить
+    параметризацией некоторого хода $\sigma_1$ игрока 1:
+    \begin{enumerate}
+    \item $f$ не убывает на $[0, 1]$,
+    \item $\int_0^1 Q(u) \di u = P$,
+    \item $\forall u_1, u_2 \in [0, 1]: f(u_1) = f(u_2) \implies Q(u_1) = Q(u_2)$.
+    \end{enumerate}
+  }
+  
+  \only<6>{%
+    Аналогично проводится параметризация хода игрока 2 в двойственной игре.
+    \begin{itemize}
+    \item%
+      Возьмем случайную величину $u$, равномерно распределенную на $[0, 1]$.
+
+    \item%
+      Пусть $h(\cdot)$ -- левая обратная функции распределения $p_2$. При этом
+      $h(u)$ и $p_2$ одинаково распределены. 
+    \end{itemize}
+
+  }
+  
+  \only<7>{%
+    Следуя схеме, приведенной в \cite[De Meyer, 2002]{demeyer02}:
+    \begin{itemize}
+    \item найдены функции $f, Q$, выравнивающие выигрыш инсайдера при $p_2 \in
+      [f(0), f(1)]$ в прямой игре;
+    \item найдена функция $h$, выравнивающая выигрыш игрока 2 при $p_1 \in
+      [h(0), h(1)]$ в двойственной игре;
+    \item из соотношений двойственности между верхними и нижними значениями
+      прямой и двойственной игр показано, что данные стратегии оптимальны.
+    \end{itemize}
+    
+  }
+
 \end{frame}
 
-\section[]{Сравнение результатов}
+\section[]{Результаты}
 
 \begin{frame}
-  Сравнение результатов
+  \frametitle{Результаты}
+  
+  \only<1>{%
+    Значение двойственной игры $G^*_n(x)$ дается формулой:
+    \begin{equation*}
+      W_{n+1}(x) = \int_0^1 W_n(x - 2u + 1), \, W_0(x) = \min(x, 0).
+    \end{equation*}
+    
+    \begin{figure}[H!]
+      \centering
+      \includegraphics[width=\textwidth]{slides/wGraphs.eps}
+    \end{figure}
+  }
+  
+  \only<2>{%
+    Значение прямой игры $G_n(P)$ дается формулой:
+    \begin{equation*}
+      V_n(P) = W_n^*(P),
+    \end{equation*}
+    где $W^*(P) = \inf_x x P - W_n(x)$ --- сопряженная в смысле Фенхеля функция.
+
+    \begin{figure}[H!]
+      \centering
+      \includegraphics[width=\textwidth]{slides/vGraphs.eps}
+    \end{figure}
+  }
+  
+  \only<3>{%
+    Функция $Q(u)$ определяется как
+    \begin{equation*}
+      Q(u) = W'_n(x + 1 - 2u),
+    \end{equation*}
+    где параметр двойственной игры $x$ удовлетворяет уравнению 
+    \begin{equation*}
+      W'_n(x) = P.
+    \end{equation*}
+
+    \begin{figure}[H!]
+      \centering
+      \includegraphics[width=\textwidth]{slides/qGraphs.eps}
+    \end{figure}
+  }
+  
+  \only<4>{%
+    Функция $f(u)$ определяется как
+    \begin{equation*}
+      f(u) = 2 (u - 1 + \beta)^{-2} \int_{1-\beta}^u (x - 1 + \beta) Q(x) \di x.
+    \end{equation*}
+    
+    При этом $h(u) = f(u)$.
+
+    \begin{figure}[H!]
+      \centering
+      \includegraphics[width=\textwidth]{slides/fGraphs.eps}
+    \end{figure}
+  }
+  
+  \only<5>{%
+    Сравнивая полученные результаты с существующими, получаем:
+    \begin{itemize}
+    \item Введение механизма заключения сделки с параметром $\beta$ влияет на
+      оптимальные стратегии инсайдера и неосведомленного игрока.
+    \item При этом значение игры не зависит от значения $\beta$ и совпадает с
+      таковым в \cite[De Meyer, 2002]{demeyer02}. В этом смысле непрерывная
+      модель отличается от дискретной \cite[Пьяных, 2016]{pyanykh16}, в которой
+      и стратегии и значение игры зависят от значения $\beta$.
+    \end{itemize}
+  }
 \end{frame}
 
 \begin{thebibliography}{99}
